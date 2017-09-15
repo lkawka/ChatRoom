@@ -16,6 +16,7 @@
 		8840C7D91F6183BD00847B33 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8840C7D81F6183BD00847B33 /* LogInViewController.swift */; };
 		8840C7DB1F6207BB00847B33 /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8840C7DA1F6207BB00847B33 /* ChatRoomViewController.swift */; };
 		889ADDE11F68459300BCA2BB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 889ADDE01F68459300BCA2BB /* Message.swift */; };
+		88E759DD1F6C662600DDF381 /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E759DC1F6C662600DDF381 /* ServerConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		8840C7D81F6183BD00847B33 /* LogInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
 		8840C7DA1F6207BB00847B33 /* ChatRoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		889ADDE01F68459300BCA2BB /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		88E759DC1F6C662600DDF381 /* ServerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerConnection.swift; path = ../ServerConnection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				8840C7B81F617BD000847B33 /* Main.storyboard */,
 				8840C7D81F6183BD00847B33 /* LogInViewController.swift */,
 				8840C7DA1F6207BB00847B33 /* ChatRoomViewController.swift */,
+				88E759DC1F6C662600DDF381 /* ServerConnection.swift */,
 				889ADDE01F68459300BCA2BB /* Message.swift */,
 				8840C7BB1F617BD000847B33 /* Assets.xcassets */,
 				8840C7BD1F617BD000847B33 /* LaunchScreen.storyboard */,
@@ -212,6 +215,7 @@
 				8840C7D71F617C6600847B33 /* MyTextField.swift in Sources */,
 				889ADDE11F68459300BCA2BB /* Message.swift in Sources */,
 				8840C7B51F617BD000847B33 /* AppDelegate.swift in Sources */,
+				88E759DD1F6C662600DDF381 /* ServerConnection.swift in Sources */,
 				8840C7DB1F6207BB00847B33 /* ChatRoomViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

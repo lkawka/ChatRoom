@@ -19,6 +19,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     
     var assignedColor: [String: UIColor] = [:]
     
+    var serverConnection = ServerConnection()
     
     var messageBoard: UIStackView!
     var username: String?
@@ -47,8 +48,6 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        colors.append(UIColor(red:0.01, green:0.66, blue:0.96, alpha:1.0))
         
         //load messages from memeory
         if let array = NSKeyedUnarchiver.unarchiveObject(withFile: Message.ArchiveURL.path) as? [Message] {
@@ -101,6 +100,24 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         let defaultAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(defaultAction)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        //only for now
+        let host = "localhost"
+        let port: UInt32 = 9997
+        
+        serverConnection.delegate = self
+        serverConnection.setUpNetworkConnection(host: host, port: port)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        serverConnection.stop()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -118,7 +135,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-    //MARK: Button handling
+    //MARK: - Button handling
     
     @IBAction func refreshButtonTapped(_ sender: Any) {
         //deleting all messages
@@ -131,7 +148,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    //MARK: Handling textField
+    //MARK: - Handling the textField
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         sendButtonTapped(button: sendButton)
@@ -143,7 +160,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
-    //MARK: Handling keyboard
+    //MARK: - Handling a keyboard
     
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
@@ -254,5 +271,10 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
             print("Failed to save messages")
         }
     }
-    
+}
+
+extension ChatRoomViewController: ServerConnectionDelegate {
+    func receivedString(_ text: String) {
+        //do something here with unprocessd text
+    }
 }
