@@ -89,6 +89,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             }
             
             chatRoom.username = username
+        case "createNewAccount":
+            //do something here
+            break
         default:
             fatalError("Unexpected destination")
         }

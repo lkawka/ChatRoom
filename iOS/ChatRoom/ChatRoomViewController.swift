@@ -29,6 +29,8 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     var textWidth: CGFloat!
     var keyboardHeight: CGFloat!
     var scrollViewHeight: CGFloat!
+    var scrollViewWidth: CGFloat!
+    var scrollViewMargin: CGFloat = 4
     
     var messages = [Message]()
     
@@ -69,7 +71,9 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         sendButton.addTarget(self, action: #selector(sendButtonTapped(button:)), for: .touchUpInside)
         messageTextField.delegate = self
         
-        //Setting up scrollview as well as stackView
+        //Setting up scrollview and stackView
+        scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: scrollViewMargin).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: scrollViewMargin).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: lowerBar.topAnchor).isActive = true
         
         messageBoard = UIStackView()
@@ -87,8 +91,9 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         messageBoard.spacing = 20.0
         
         //getting sizes
-        textWidth = CGFloat(scrollView.frame.width * 0.8)
         scrollViewHeight = scrollView.frame.height
+        scrollViewWidth = self.view.frame.width - 2 * scrollViewMargin
+        textWidth = CGFloat(scrollViewWidth * 0.8)
         
         loadMessages()
         moveToBottom(animate: false)
@@ -109,14 +114,14 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         let port: UInt32 = 9997
         
         serverConnection.delegate = self
-        serverConnection.setUpNetworkConnection(host: host, port: port)
+        //serverConnection.setUpNetworkConnection(host: host, port: port)
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         
-        serverConnection.stop()
+        //serverConnection.stop()
     }
 
     override func didReceiveMemoryWarning() {
@@ -213,7 +218,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     
     //adds new message to messageBoard (stackView)
     func addNewMessage(_ message: Message) {
-        //'v' view allows for the label to be on the right side
+        //'v' view allows the label to be on the right side
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
         
@@ -233,7 +238,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
             label.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
         }
         
-        v.widthAnchor.constraint(equalToConstant: scrollView.frame.width).isActive = true
+        v.widthAnchor.constraint(equalToConstant: scrollViewWidth).isActive = true
         v.heightAnchor.constraint(equalToConstant: size.height).isActive = true
         
         v.addSubview(label)
