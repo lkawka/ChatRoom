@@ -54,7 +54,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             passwordTextField.becomeFirstResponder()
         } else {
             if(logInButton.isEnabled == true) {
-                performSegue(withIdentifier: "enterChatRoom", sender: nil)
+                logInButtonTapped(button: logInButton)
             }
             
         }
@@ -82,7 +82,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         switch segue.identifier ?? "" {
         case "enterChatRoom":
-            logInButtonTapped(button: logInButton)
             
             guard let chatRoom = segue.destination as? ChatRoomViewController else {
                 fatalError("ChatRoom did not load")
@@ -124,9 +123,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     }
     
     func logInButtonTapped(button: UIButton) {
-        
         username = usernameTextField.text!
         password = passwordTextField.text!
+        
+        performSegue(withIdentifier: "enterChatRoom", sender: nil)
     }
 
 }

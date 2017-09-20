@@ -110,7 +110,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(true)
         
         //only for now
-        let host = "localhost"
+        let host = "127.0.0.1"
         let port: UInt32 = 9997
         
         serverConnection.delegate = self
