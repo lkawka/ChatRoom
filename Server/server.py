@@ -1,6 +1,5 @@
 # server.py
 
-import sys
 import socket
 import select
 import pymysql
@@ -9,13 +8,13 @@ import pymysql
 Server commands to clients:
     MSG04user0003hey - message "hey" from user   
     
-    SERREG1 - client is successfully registered
-    SERREG0 - client is unsuccessfully registered
+    REG1 - client is successfully registered
+    REG0 - client is unsuccessfully registered
     
-    SERLOG1 - client is successfully logged in
-    SERLOG0 - client is unsuccessfully logged in
+    LOG1 - client is successfully logged in
+    LOG0 - client is unsuccessfully logged in
     
-    SERDIS - client about to be disconnected from server
+    DIS - client about to be disconnected from server
     
 """
 
@@ -26,15 +25,20 @@ maxTextLength = 4096
 maxClientConnections = 100
 coder = 'ascii'
 
+succssefullyRegisterd = "REG1\n".encode(coder)
+unsuccessfullyRegistered = "REG0\n".encode(coder)
+successfullyLoggedIn = "LOG1\n".encode(coder)
+unsuccessfullyLoggedIn = "LOG0\n".encode(coder)
+
 isLoggedIn = dict()
 
 
 def getConnectionToDatabase():
-    connection = pymysql.connect(host=host,
-                                 port=3306,
-                                 user='root',
-                                 passwd='bizon',
-                                 db='chatRoom')
+    connection = pymysql.connect(host = "127.0.0.1",
+                                 port = 3306,
+                                 user = 'root',
+                                 passwd = 'bizon',
+                                 db = 'chatRoom')
     return connection
 
 
@@ -84,31 +88,37 @@ def processData(serverSocket, sender, data):
         # Registration request
         # 'REG' + 2 digit username length + username + 2 digit password length + password + 2 digit email length + email
         # example: REG04User05maslo13user@user.com
+        try:
+            usernameLength = int(data[3:5])
+            username = data[5:5 + usernameLength]
 
-        usernameLength = int(data[3:5])
-        username = data[5:5 + usernameLength]
+            passwordLength = int(data[5 + usernameLength:7 + usernameLength])
+            password = data[7 + usernameLength:7 + usernameLength + passwordLength]
 
-        passwordLength = int(data[5 + usernameLength:7 + usernameLength])
-        password = data[7 + usernameLength:7 + usernameLength + passwordLength]
+            emailLength = int(data[7 + usernameLength + passwordLength:9 + usernameLength + passwordLength])
+            email = data[9 + usernameLength + passwordLength:9 + usernameLength + passwordLength + emailLength]
 
-        emailLength = int(data[7 + usernameLength + passwordLength:9 + usernameLength + passwordLength])
-        email = data[9 + usernameLength + passwordLength:9 + usernameLength + passwordLength + emailLength]
-
-        registrationRequest(sender, username, password, email)
+            registrationRequest(sender, username, password, email)
+        except:
+            print("Unable to process data")
     elif data[0:3] == 'LOG':
         # Log in request
         # 'LOG' + 2 digit username length + username + 2 digit password length + password
 
-        usernameLength = int(data[3:5])
-        username = data[5:5 + usernameLength]
+        try:
+            usernameLength = int(data[3:5])
+            username = data[5:5 + usernameLength]
 
-        passwordLength = int(data[5 + usernameLength:7 + usernameLength])
-        password = data[7 + usernameLength:7 + usernameLength + passwordLength]
+            passwordLength = int(data[5 + usernameLength:7 + usernameLength])
+            password = data[7 + usernameLength:7 + usernameLength + passwordLength]
 
-        logInRequest(sender, username, password)
+            logInRequest(sender, username, password)
+        except:
+            print("Unable to process data")
     elif data[0:3] == 'MSG':
         # New message
         # 'MSG' + 2 digit username length + username + 4 digit message length + message
+        data += "\n"
 
         newMessage(serverSocket, sender, data)
     elif data[0:3] == 'OUT':
@@ -116,7 +126,7 @@ def processData(serverSocket, sender, data):
         isLoggedIn[sender.getpeername()[1]] = False
 
     else:
-        print("Unable to procces data")
+        print("Unable to process data")
 
 
 def registrationRequest(sender, username, password, email):
@@ -130,10 +140,10 @@ def registrationRequest(sender, username, password, email):
         databaseConnection.commit()
 
         print(username, "successfully registered")
-        sender.send("SERREG1".encode(coder))
+        sender.send(succssefullyRegisterd)
     except:
         print("Failed to register ", username)
-        sender.send("SERREG0".encode(coder))
+        sender.send(unsuccessfullyRegistered)
 
     databaseConnection.close()
 
@@ -148,18 +158,16 @@ def logInRequest(sender, username, password):
         databaseConnection.commit()
     except:
         print("Failed to log in")
-        databaseConnection.close()
-        sender.send("SERLOG0".encode(coder))
-        return
+        sender.send(unsuccessfullyLoggedIn)
 
     if (rowsCount > 0):
         for row in cursor:
             print(row[0], "successfully logged in")
             isLoggedIn[sender.getpeername()[1]] = True
-            sender.send("SERLOG1".encode(coder))
+            sender.send(successfullyLoggedIn)
     else:
         print('Wrong username and/or password')
-        sender.send("SERLOG0".encode(coder))
+        sender.send(unsuccessfullyLoggedIn)
 
     databaseConnection.close()
 
