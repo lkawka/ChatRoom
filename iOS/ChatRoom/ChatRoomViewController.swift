@@ -112,7 +112,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         //only for now
         let host = "127.0.0.1"
         let port: UInt32 = 9997
-        
+        moveToBottom(animate: false)
         serverConnection.delegate = self
         //serverConnection.setUpNetworkConnection(host: host, port: port)
         
@@ -170,6 +170,7 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
+            print("Keyboard height: \(keyboardHeight)")
         }
         lowerBar.frame.origin.y = self.view.frame.height - keyboardHeight - lowerBar.frame.height
         scrollView.frame.size.height = scrollViewHeight - keyboardHeight - 10
@@ -177,7 +178,10 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     }
     
     func keyboardDidShow(notification: NSNotification) {
-        
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            keyboardHeight = keyboardSize.height
+            print("2 Keyboard height: \(keyboardHeight)")
+        }
     }
     
     func keyboardWillHide(_ notification: NSNotification) {

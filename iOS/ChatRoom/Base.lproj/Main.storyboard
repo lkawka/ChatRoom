@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="0qi-Bk-MsF">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="0qi-Bk-MsF">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,11 +19,11 @@
                         <viewControllerLayoutGuide type="bottom" id="AFl-xd-pC7"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lGi-B7-Z9C">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="liK-zj-ESM" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="213" width="293" height="30"/>
+                                <rect key="frame" x="41" y="237" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
@@ -32,7 +32,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BPZ-FE-A04" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="253" width="293" height="30"/>
+                                <rect key="frame" x="41" y="277" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -41,7 +41,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lTO-nB-blo">
-                                <rect key="frame" x="41" y="293" width="293" height="35"/>
+                                <rect key="frame" x="41" y="317" width="293" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="eRm-ST-Tff"/>
                                 </constraints>
@@ -51,11 +51,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kic-JC-W8I">
-                                <rect key="frame" x="109" y="336" width="157" height="30"/>
+                                <rect key="frame" x="109" y="360" width="157" height="30"/>
                                 <state key="normal" title="Forgot your password?"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QKQ-vD-fVp">
-                                <rect key="frame" x="118.5" y="374" width="138" height="30"/>
+                                <rect key="frame" x="118.66666666666669" y="398" width="138" height="30"/>
                                 <state key="normal" title="Create new account"/>
                                 <connections>
                                     <segue destination="wEH-dn-wul" kind="show" identifier="createNewAccount" id="4vg-1j-MR3"/>
@@ -101,19 +101,19 @@
                         <viewControllerLayoutGuide type="bottom" id="WAe-dL-p55"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="JQc-o1-KIr">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lw7-cb-jgf">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lw7-cb-jgf">
                                 <rect key="frame" x="8" y="58" width="359" height="568"/>
                             </scrollView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ep0-I5-9NB">
-                                <rect key="frame" x="148" y="24" width="79" height="21"/>
+                                <rect key="frame" x="148" y="48" width="79" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C59-HU-jWu">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C59-HU-jWu">
                                 <rect key="frame" x="0.0" y="626" width="375" height="41"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7zk-4r-xED" userLabel="Message Text Field">
@@ -137,14 +137,14 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mOW-i5-rLc">
-                                <rect key="frame" x="4" y="24" width="52" height="30"/>
+                                <rect key="frame" x="4" y="48" width="52" height="30"/>
                                 <state key="normal" title="Log out"/>
                                 <connections>
                                     <segue destination="0qi-Bk-MsF" kind="show" id="hlC-Pt-SoJ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZu-i5-1k2">
-                                <rect key="frame" x="332" y="24" width="39" height="30"/>
+                                <rect key="frame" x="332" y="48" width="39" height="30"/>
                                 <state key="normal" title="Menu"/>
                                 <connections>
                                     <action selector="refreshButtonTapped:" destination="3gJ-O4-cir" eventType="touchUpInside" id="9xU-d5-gj3"/>
@@ -189,11 +189,11 @@
                         <viewControllerLayoutGuide type="bottom" id="TDf-u5-xZS"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GCB-nD-UsE">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8uH-tf-UII" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="161" width="293" height="30"/>
+                                <rect key="frame" x="41" y="185" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
@@ -202,7 +202,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GMU-of-XYG" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="201" width="293" height="30"/>
+                                <rect key="frame" x="41" y="225" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
@@ -211,7 +211,7 @@
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pcn-dH-DcX" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="241" width="293" height="30"/>
+                                <rect key="frame" x="41" y="265" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
@@ -220,20 +220,20 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ezv-f8-K9x">
-                                <rect key="frame" x="41" y="281" width="293" height="35"/>
+                                <rect key="frame" x="41" y="305" width="293" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="krn-JW-rQl"/>
                                 </constraints>
                                 <state key="normal" title="Create..."/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="241-Rx-aGB">
-                                <rect key="frame" x="136" y="130" width="103" height="21"/>
+                                <rect key="frame" x="136" y="154" width="103" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KWn-O1-Gns">
-                                <rect key="frame" x="20" y="24" width="34" height="30"/>
+                                <rect key="frame" x="20" y="48" width="34" height="30"/>
                                 <state key="normal" title="Back"/>
                                 <connections>
                                     <segue destination="0qi-Bk-MsF" kind="show" id="wKo-c4-Bpj"/>
@@ -283,27 +283,27 @@
                         <viewControllerLayoutGuide type="bottom" id="7fw-4v-uoI"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="9zG-GD-Qvv">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sGK-2F-T3A" customClass="MyTextField" customModule="ChatRoom" customModuleProvider="target">
-                                <rect key="frame" x="41" y="161" width="293" height="30"/>
+                                <rect key="frame" x="41" y="185" width="293" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWD-io-4bp">
-                                <rect key="frame" x="126.5" y="130" width="122" height="21"/>
+                                <rect key="frame" x="126.66666666666666" y="154" width="121.99999999999997" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I6s-ZQ-aHL">
-                                <rect key="frame" x="20" y="24" width="34" height="30"/>
+                                <rect key="frame" x="20" y="48" width="34" height="30"/>
                                 <state key="normal" title="Back"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zrd-dO-NV9">
-                                <rect key="frame" x="41" y="201" width="293" height="35"/>
+                                <rect key="frame" x="41" y="225" width="293" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="5AC-84-TfQ"/>
                                 </constraints>
