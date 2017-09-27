@@ -23,7 +23,7 @@ port = 9997
 socketList = []
 maxTextLength = 4096
 maxClientConnections = 100
-coder = 'ascii'
+coder = 'utf-8'
 
 succssefullyRegisterd = "REG1\n".encode(coder)
 unsuccessfullyRegistered = "REG0\n".encode(coder)
