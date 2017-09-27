@@ -10,7 +10,7 @@ import UIKit
 
 
 
-class ChatRoomViewController: UIViewController, UITextFieldDelegate {
+class ChatRoomViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate {
     
     //MARK: - Properties
     
@@ -19,18 +19,11 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     
     var assignedColor: [String: UIColor] = [:]
     
-    var serverConnection = ServerConnection()
+    var serverConnection: ServerConnection?
     
-    var messageBoard: UIStackView!
-    var username: String?
+    var username: String = "ERROR"
     
     var alert: UIAlertController!
-    
-    var textWidth: CGFloat!
-    var keyboardHeight: CGFloat!
-    var scrollViewHeight: CGFloat!
-    var scrollViewWidth: CGFloat!
-    var scrollViewMargin: CGFloat = 4
     
     var messages = [Message]()
     
@@ -38,18 +31,33 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     var grayColor = UIColor(red:0.58, green:0.60, blue:0.60, alpha:1.0)
     var messageColor = UIColor(red:1.00, green:0.34, blue:0.13, alpha:0.85)
 
-    @IBOutlet weak var logOutButton: UIButton!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet var usernameLabel: UILabel!
     
-    @IBOutlet weak var lowerBar: UIView!
-    @IBOutlet weak var messageTextField: UITextField!
-    @IBOutlet weak var sendButton: UIButton!
+    var usernameLabel = UILabel()
+    var menuButton = UIButton()
     
-    @IBOutlet weak var refreshButton: UIButton!
+    var messageBoard = UITableView()
+    
+    var lowerBar = UIView()
+    var messageTextField = UITextField()
+    var sendButton = UIButton()
+    
+    let topMargin = UIApplication.shared.statusBarFrame.height + 4
+    let sideMargin: CGFloat = 4
+    var textWidth: CGFloat!
+    var keyboardHeight: CGFloat!
+    var lowerBarHeight: CGFloat = 40
+    var tableViewHeight: CGFloat!
+    var tableViewWidth: CGFloat!
+    var messageWidth: CGFloat!
+    var spaceBetweenCells: CGFloat = 15
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("Loading ChatRoomViewController..")
+        
+        messageBoard.delegate = self
+        messageBoard.dataSource = self
         
         //load messages from memeory
         if let array = NSKeyedUnarchiver.unarchiveObject(withFile: Message.ArchiveURL.path) as? [Message] {
@@ -62,66 +70,62 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide , object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: .UIKeyboardDidHide , object: nil)
 
-        //Setting main label
-        usernameLabel.text = username ?? ""
+        //Setting up main label
+        usernameLabel.text = username
+        self.view.addSubview(usernameLabel)
         
-        //some lowerBar setting up
-        lowerBar.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        messageBoard.separatorStyle = .none
+        messageBoard.allowsSelection = false
+        self.view.addSubview(messageBoard)
+        
+        menuButton.setTitle("Menu", for: .normal)
+        menuButton.setTitleColor(orangeColor, for: .normal)
+        menuButton.addTarget(self, action: #selector(menuButtonTapped(_:)), for: .touchUpInside)
+        self.view.addSubview(menuButton)
+        
+        //Setting up lowerBar
+        sendButton.setTitle("Send", for: .normal)
         sendButton.setTitleColor(orangeColor, for: .normal)
-        sendButton.addTarget(self, action: #selector(sendButtonTapped(button:)), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+        
+        messageTextField.backgroundColor = grayColor
         messageTextField.delegate = self
         
-        //Setting up scrollview and stackView
-        scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: scrollViewMargin).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: scrollViewMargin).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: lowerBar.topAnchor).isActive = true
+        lowerBar.addSubview(sendButton)
+        lowerBar.addSubview(messageTextField)
+        self.view.addSubview(lowerBar)
         
-        messageBoard = UIStackView()
-        scrollView.addSubview(messageBoard)
-        messageBoard.translatesAutoresizingMaskIntoConstraints = false
-        
-        messageBoard.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        messageBoard.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        messageBoard.leftAnchor.constraint(equalTo: scrollView.leftAnchor).isActive = true
-        messageBoard.rightAnchor.constraint(equalTo: scrollView.rightAnchor).isActive = true
-        
-        messageBoard.axis  = UILayoutConstraintAxis.vertical
-        messageBoard.distribution  = UIStackViewDistribution.equalSpacing
-        messageBoard.alignment = UIStackViewAlignment.top
-        messageBoard.spacing = 20.0
-        
-        //getting sizes
-        scrollViewHeight = scrollView.frame.height
-        scrollViewWidth = self.view.frame.width - 2 * scrollViewMargin
-        textWidth = CGFloat(scrollViewWidth * 0.8)
-        
-        loadMessages()
-        moveToBottom(animate: false)
-        
-        logOutButton.setTitleColor(orangeColor, for: .normal)
-        refreshButton.setTitleColor(orangeColor, for: .normal)
-        
-        alert = UIAlertController(title: "Menu", message: "*Additional features*", preferredStyle: .actionSheet)
-        let defaultAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(defaultAction)
+        serverConnection?.delegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        //only for now
-        let host = "127.0.0.1"
-        let port: UInt32 = 9997
-        moveToBottom(animate: false)
-        serverConnection.delegate = self
-        //serverConnection.setUpNetworkConnection(host: host, port: port)
+        let menuButtonSize = menuButton.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        menuButton.frame = CGRect(origin: CGPoint(x: self.view.frame.width-sideMargin-menuButtonSize.width, y: topMargin), size: menuButtonSize)
         
+        //improve later
+        let usernameLabelSize = usernameLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        usernameLabel.frame = CGRect(origin: CGPoint(x: self.view.frame.midX-usernameLabelSize.width/2.0, y: topMargin), size: usernameLabelSize)
+        
+        tableViewWidth = self.view.frame.width-2*sideMargin
+        tableViewHeight = self.view.frame.height-topMargin-menuButtonSize.height-5-lowerBarHeight
+        
+        lowerBar.frame = CGRect(x: sideMargin, y: self.view.frame.height - lowerBarHeight, width: tableViewWidth, height: lowerBarHeight)
+        
+        let sendButtonSize = sendButton.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+        sendButton.frame = CGRect(origin: CGPoint(x: lowerBar.frame.width-sendButtonSize.width, y: 4), size: sendButtonSize)
+        messageTextField.frame = CGRect(x: 0, y: 4, width: lowerBar.frame.width-sendButtonSize.width-5, height: lowerBarHeight-8)
+        
+        messageBoard.frame = CGRect(x: sideMargin, y: topMargin+menuButtonSize.height+5, width: tableViewWidth, height: tableViewHeight)
+        
+        messageWidth = 4*tableViewWidth/5
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        //serverConnection.stop()
+        moveToBottom(animate: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -129,8 +133,6 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    
-
     /*
     // MARK: - Navigation
 
@@ -140,23 +142,83 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-    //MARK: - Button handling
     
-    @IBAction func refreshButtonTapped(_ sender: Any) {
+    //MARK: Handling table view
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = MessageTableViewCell(style: .default, reuseIdentifier: "messageCell")
+        let message = messages[indexPath.row]
+        var shiftRight = false
+        var backgroundColor = messageColor
+        
+        if(message.id == usernameLabel.text) {
+            shiftRight = true
+        } else {
+            if(assignedColor[message.id] == nil) {
+                assignedColor[message.id] = colors[Int(arc4random_uniform(UInt32(colors.count)))]
+            }
+            backgroundColor = assignedColor[message.id]!
+        }
+        cell.setUp(message: message.text, width: messageWidth, shiftRight: shiftRight, color: backgroundColor, viewWidth: tableViewWidth)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let message = messages[indexPath.row].text
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.text = message
+        return label.sizeThatFits(CGSize(width: messageWidth, height: CGFloat.greatestFiniteMagnitude)).height + 4 + spaceBetweenCells
+    }
+    
+    //MARK: - Handling buttons
+    
+    func menuButtonTapped(_ sender: Any) {
         //deleting all messages
         /*messages.removeAll()
         saveMessages()
         
         loadMessages()*/
+        alert = UIAlertController(title: "Menu", message: "*Additional features*", preferredStyle: .actionSheet)
+        let defaultAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(defaultAction)
+        
+        let logOutAction = UIAlertAction(title: "Log out", style: .default, handler: {action in
+            self.logOut()
+        })
+        alert.addAction(logOutAction)
         
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func sendButtonTapped() {
+        if(messageTextField.text! != "") {
+            let data = "MSG" + String(format: "%02d", username.count) + username + String(format: "%04d", messageTextField.text!.count) + messageTextField.text!
+            if let _ = serverConnection {
+                serverConnection?.sendData(data)
+            }
+            addNewMessage(message: Message(messageTextField.text!, username))
+            
+            messageTextField.text = ""
+        }
+        
+        messageTextField.resignFirstResponder()
     }
     
     
     //MARK: - Handling the textField
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        sendButtonTapped(button: sendButton)
+        sendButtonTapped()
         
         return true
     }
@@ -168,25 +230,21 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     //MARK: - Handling a keyboard
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             keyboardHeight = keyboardSize.height
-            print("Keyboard height: \(keyboardHeight)")
         }
         lowerBar.frame.origin.y = self.view.frame.height - keyboardHeight - lowerBar.frame.height
-        scrollView.frame.size.height = scrollViewHeight - keyboardHeight - 10
+        messageBoard.frame.size.height = tableViewHeight - keyboardHeight - 10
+        
         moveToBottom(animate: false)
     }
     
     func keyboardDidShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            keyboardHeight = keyboardSize.height
-            print("2 Keyboard height: \(keyboardHeight)")
-        }
     }
     
     func keyboardWillHide(_ notification: NSNotification) {
         lowerBar.frame.origin.y = self.view.frame.height - lowerBar.frame.height
-        scrollView.frame.size.height = scrollViewHeight
+        messageBoard.frame.size.height = tableViewHeight
     }
     
     func keyboardDidHide(_ notification: NSNotification) {
@@ -194,82 +252,28 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     }
     //MARK: - Private functions
     
-    func sendButtonTapped(button: UIButton) {
-        if(messageTextField.text! != "") {
-            let newMessage = Message(messageTextField.text!, username!)
-            messages += [newMessage]
-            saveMessages()
-            addNewMessage(newMessage)
-            
-            messageTextField.text = ""
-        }
-        
-        messageTextField.resignFirstResponder()
+    //adds new message to messageBoard
+    func addNewMessage(message: Message) {
+        messages += [message]
+        saveMessages()
+        addToMessageBoard(message)
     }
     
-    func loadMessages() {
-
-        //clear data
-        for v in messageBoard.subviews {
-            messageBoard.removeArrangedSubview(v)
-        }
-        
-        //load messages
-        for message in messages {
-            addNewMessage(message)
-        }
-    }
-    
-    //adds new message to messageBoard (stackView)
-    func addNewMessage(_ message: Message) {
-        //'v' view allows the label to be on the right side
-        let v = UIView()
-        v.translatesAutoresizingMaskIntoConstraints = false
-        
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        label.numberOfLines = 0
-        label.lineBreakMode = NSLineBreakMode.byWordWrapping
-        //label.layer.backgroundColor = messageColor.cgColor
-        //label.layer.cornerRadius = 7.0
-        label.text = message.text
-        label.textColor = UIColor.white
-        
-        let size = label.sizeThatFits(CGSize(width: self.textWidth, height: CGFloat.greatestFiniteMagnitude))
-        
-        if(label.intrinsicContentSize.width > textWidth!) {
-            label.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
-        }
-        
-        v.widthAnchor.constraint(equalToConstant: scrollViewWidth).isActive = true
-        v.heightAnchor.constraint(equalToConstant: size.height).isActive = true
-        
-        v.addSubview(label)
-        
-        label.topAnchor.constraint(equalTo: v.topAnchor).isActive = true
-        
-        if(message.id == username){
-            label.trailingAnchor.constraint(equalTo: v.trailingAnchor).isActive = true
-            label.textAlignment = NSTextAlignment.right
-            label.layer.backgroundColor = messageColor.cgColor
-        } else {
-            label.leadingAnchor.constraint(equalTo: v.leadingAnchor).isActive = true
-            
-            if(assignedColor[message.id] == nil) {
-                assignedColor[message.id] = colors[Int(arc4random_uniform(UInt32(colors.count)))]
-            }
-            label.layer.backgroundColor = assignedColor[message.id]?.cgColor
-        }
-        
-        messageBoard.addArrangedSubview(v)
+    func addToMessageBoard(_ message: Message) {
+        messageBoard.beginUpdates()
+        messageBoard.insertRows(at: [IndexPath(row: messages.count-1, section: 0)], with: .none)
+        messageBoard.endUpdates()
     }
     
     func moveToBottom(animate: Bool) {
-        if(scrollView.contentSize.height > scrollView.frame.height) {
-            let bottomOfSet = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.frame.height)
-            scrollView.setContentOffset(bottomOfSet, animated: animate)
+        if(messageBoard.contentSize.height > messageBoard.frame.height) {
+            let bottomOfSet = CGPoint(x: 0, y: messageBoard.contentSize.height - messageBoard.frame.height)
+            messageBoard.setContentOffset(bottomOfSet, animated: animate)
         }
+    }
+    
+    func logOut() {
+        self.performSegue(withIdentifier: "logOut", sender: nil)
     }
     
     func saveMessages() {
@@ -282,8 +286,41 @@ class ChatRoomViewController: UIViewController, UITextFieldDelegate {
     }
 }
 
+extension String {
+    func subString(_ startIndex: Int, _ length: Int) -> String {
+        if (self.count < length || startIndex+1 > self.count){
+            return ""
+        }
+        var result = ""
+        for i in startIndex...startIndex+length-1 {
+            let index = self.index(self.startIndex, offsetBy: i)
+            result += String(self[index])
+        }
+        return result
+    }
+    
+    func at(_ index: Int) -> String {
+        let index = self.index(self.startIndex, offsetBy: index)
+        return String(self[index])
+    }
+}
+
 extension ChatRoomViewController: ServerConnectionDelegate {
-    func receivedString(_ text: String) {
-        //do something here with unprocessd text
+    func receivedData(_ text: String) {
+        if(text.subString(0, 3) == "MSG") {
+            let msgUsernameLength = Int(text.subString(3, 2)) ?? 0
+            let msgUsername = text.subString(5, msgUsernameLength)
+            let messageLength = Int(text.subString(5+msgUsernameLength, 4)) ?? 0
+            let message = text.subString(9+msgUsernameLength, messageLength)
+            
+            if(msgUsernameLength == 0 || messageLength == 0) {
+                print("Wrong message format")
+                return
+            }
+            addNewMessage(message: Message(message, msgUsername))
+        }
+        else if(text.subString(0, 3) == "DIS"){
+            self.logOut()
+        }
     }
 }

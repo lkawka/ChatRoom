@@ -19,6 +19,7 @@
 		88E759DD1F6C662600DDF381 /* ServerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E759DC1F6C662600DDF381 /* ServerConnection.swift */; };
 		88E759DF1F6D006C00DDF381 /* CreateNewAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E759DE1F6D006C00DDF381 /* CreateNewAccountViewController.swift */; };
 		88E759E11F6D0EE200DDF381 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E759E01F6D0EE200DDF381 /* ResetPasswordViewController.swift */; };
+		88EE5F091F798497008A1075 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88EE5F081F798497008A1075 /* MessageTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		88E759DC1F6C662600DDF381 /* ServerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerConnection.swift; sourceTree = "<group>"; };
 		88E759DE1F6D006C00DDF381 /* CreateNewAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccountViewController.swift; sourceTree = "<group>"; };
 		88E759E01F6D0EE200DDF381 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		88EE5F081F798497008A1075 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				8840C7B81F617BD000847B33 /* Main.storyboard */,
 				8840C7D81F6183BD00847B33 /* LogInViewController.swift */,
 				8840C7DA1F6207BB00847B33 /* ChatRoomViewController.swift */,
+				88EE5F081F798497008A1075 /* MessageTableViewCell.swift */,
 				88E759DE1F6D006C00DDF381 /* CreateNewAccountViewController.swift */,
 				88E759E01F6D0EE200DDF381 /* ResetPasswordViewController.swift */,
 				88E759DC1F6C662600DDF381 /* ServerConnection.swift */,
@@ -219,6 +222,7 @@
 			files = (
 				8840C7D91F6183BD00847B33 /* LogInViewController.swift in Sources */,
 				8840C7D71F617C6600847B33 /* MyTextField.swift in Sources */,
+				88EE5F091F798497008A1075 /* MessageTableViewCell.swift in Sources */,
 				889ADDE11F68459300BCA2BB /* Message.swift in Sources */,
 				88E759E11F6D0EE200DDF381 /* ResetPasswordViewController.swift in Sources */,
 				88E759DF1F6D006C00DDF381 /* CreateNewAccountViewController.swift in Sources */,

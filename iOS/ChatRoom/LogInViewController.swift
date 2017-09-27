@@ -10,6 +10,9 @@ import UIKit
 
 class LogInViewController: UIViewController, UITextFieldDelegate {
     
+    var host = "127.0.0.1"
+    var port: UInt32 = 9997
+    
     var username: String = ""
     var password: String = ""
     
@@ -22,6 +25,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var passwordReminderButton: UIButton!
     @IBOutlet weak var createNewAccountButton: UIButton!
+    @IBOutlet weak var refreshButton: UIButton!
+    
+    var serverConnection = ServerConnection()
     
     
     override func viewDidLoad() {
@@ -41,7 +47,16 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         passwordReminderButton.setTitleColor(orangeColor, for: .normal)
         createNewAccountButton.setTitleColor(orangeColor, for: .normal)
-
+        
+        refreshButton.setTitleColor(orangeColor, for: .normal)
+        refreshButton.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        serverConnection.delegate = self
+        serverConnection.setUpNetworkConnection(host: self.host, port: self.port)
     }
     
     //MARK: - Handling textFields
@@ -56,7 +71,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             if(logInButton.isEnabled == true) {
                 logInButtonTapped(button: logInButton)
             }
-            
         }
        
         return true
@@ -88,8 +102,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             }
             
             chatRoom.username = username
+            chatRoom.serverConnection = self.serverConnection
         case "createNewAccount":
-            //do something here
+            //do something here                         <---------- DO STH HERE LATER
             break
         default:
             fatalError("Unexpected destination")
@@ -99,6 +114,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: - Buttons' actions
     
+    @IBAction func refreshButtonTapped(_ sender: Any) {
+        serverConnection.stop()
+        serverConnection.setUpNetworkConnection(host: host, port: port)
+    }
     
     @IBAction func usernameTextFieldChanged(_ sender: MyTextField) {
         handleLogInButton()
@@ -126,7 +145,36 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         username = usernameTextField.text!
         password = passwordTextField.text!
         
-        performSegue(withIdentifier: "enterChatRoom", sender: nil)
+        let logInRequest = "LOG" + String(format: "%02d", username.count) + username + String(format: "%02d", password.count) + password
+        
+        serverConnection.sendData(logInRequest)
+        
+        self.view.endEditing(true)
     }
-
+    
+    func clearTextFields() {
+        usernameTextField.text = ""
+        passwordTextField.text = ""
+    }
+}
+extension LogInViewController: ServerConnectionDelegate {
+    func receivedData(_ text: String) {
+        print("LogInViewController received \(text)")
+        
+        if(text == "DIDNOTCONNECT") {
+            refreshButton.isHidden = false
+            
+            print("Did not connect to the server")
+        } else if (text == "DIDCONNECT") {
+            refreshButton.isHidden = true
+            
+            print("Successfully connected to the server")
+        } else if (text.subString(0, 4) == "LOG0") {
+            print("wrong username or password")
+            
+            clearTextFields()
+        } else if (text.subString(0, 4) == "LOG1") {
+            performSegue(withIdentifier: "enterChatRoom", sender: nil)
+        }
+    }
 }

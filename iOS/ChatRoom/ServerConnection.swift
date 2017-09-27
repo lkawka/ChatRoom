@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ServerConnectionDelegate: class {
-    func receivedString(_ text: String)
+    func receivedData(_ text: String)
 }
 
 class ServerConnection: NSObject {
@@ -44,8 +44,8 @@ class ServerConnection: NSObject {
     }
     
     //function that sends already processed string
-    func sendString(string: String) {
-        let data = string.data(using: .ascii)!
+    func sendData(_ text: String) {
+        let data = text.data(using: .utf8)!
         _ = data.withUnsafeBytes {
             outputStream.write($0, maxLength: data.count)
         }
@@ -61,19 +61,27 @@ extension ServerConnection: StreamDelegate {
     func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         switch eventCode {
         case Stream.Event.hasBytesAvailable:
-            print("Message received")
+            readAvailableBytes(stream: aStream as! InputStream)
         case Stream.Event.endEncountered:
-            print("Message received 2")
+            print("The end of the stream has been reached")
+            
+            delegate?.receivedData("DIS")
         case Stream.Event.errorOccurred:
-            print("Error occured")
+            print("An error has occurred on the stream")
+            
+            delegate?.receivedData("DIDNOTCONNECT")
         case Stream.Event.hasSpaceAvailable:
-            print("Has space available")
+            print("The stream can accept bytes for writing")
+        case Stream.Event.openCompleted:
+            print("The open has completed successfully")
+            
+            delegate?.receivedData("DIDCONNECT")
         default:
-            print("Some other event..")
+            print("Unidetified event")
         }
     }
     
-    func readAvailableBytes(stream: InputStream) {
+    private func readAvailableBytes(stream: InputStream) {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: maxTextLength)
         
         while stream.hasBytesAvailable {
@@ -86,8 +94,8 @@ extension ServerConnection: StreamDelegate {
                 }
             }
             
-            if let string = String(bytesNoCopy: buffer, length: numberOfBytesRead, encoding: .ascii, freeWhenDone: true) {
-                delegate?.receivedString(string)
+            if let data = String(bytesNoCopy: buffer, length: numberOfBytesRead, encoding: .utf8, freeWhenDone: true) {
+                delegate?.receivedData(data)
             }
         }
         
