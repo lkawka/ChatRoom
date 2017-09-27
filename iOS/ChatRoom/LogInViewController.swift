@@ -142,12 +142,16 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     }
     
     func logInButtonTapped(button: UIButton) {
+        print("Log in button tapped")
         username = usernameTextField.text!
         password = passwordTextField.text!
         
         let logInRequest = "LOG" + String(format: "%02d", username.count) + username + String(format: "%02d", password.count) + password
         
-        serverConnection.sendData(logInRequest)
+        if(refreshButton.isHidden) {
+            serverConnection.sendData(logInRequest)
+            print("Log in request sent")
+        }
         
         self.view.endEditing(true)
     }
